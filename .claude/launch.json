@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "quick-access",
+      "runtimeExecutable": "powershell.exe",
+      "runtimeArgs": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "D:\\coding\\quick-access-newtab\\tools\\serve.ps1", "-Root", "D:\\coding\\quick-access-newtab\\quick-access", "-Port", "8765"],
+      "port": 8765
+    }
+  ]
+}

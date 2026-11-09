@@ -1,0 +1,49 @@
+{
+  "manifest_version": 3,
+  "name": "Quick Access — Tab Baru",
+  "version": "1.5.0",
+  "description": "Halaman tab baru dengan shortcut, jam, cuaca, jadwal sholat, azan, pomodoro, pengingat, kalender, dan catatan.",
+  "chrome_url_overrides": {
+    "newtab": "newtab.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": [
+    "storage",
+    "unlimitedStorage",
+    "alarms",
+    "notifications",
+    "offscreen",
+    "history",
+    "bookmarks",
+    "favicon",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://api.open-meteo.com/*",
+    "https://geocoding-api.open-meteo.com/*",
+    "https://api.aladhan.com/*",
+    "https://api.alquran.cloud/*",
+    "https://translate.googleapis.com/*",
+    "https://lrclib.net/*",
+    "https://www.bing.com/*",
+    "https://open.er-api.com/*",
+    "https://api.gold-api.com/*",
+    "https://air-quality-api.open-meteo.com/*",
+    "https://www.youtube.com/*",
+    "https://music.youtube.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://www.youtube.com/*", "https://music.youtube.com/*"],
+      "js": ["yt-content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

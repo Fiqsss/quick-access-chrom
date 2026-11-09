@@ -1,0 +1,643 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tab Baru</title>
+  <link rel="icon" href="icons/icon48.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600&family=Amiri&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Background -->
+  <div class="bg" id="bg" aria-hidden="true">
+    <span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span>
+  </div>
+  <div class="bg-img" id="bg-img" aria-hidden="true"></div>
+  <div class="bg-dim" id="bg-dim" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <div class="top-left"><span class="live-dot"></span><span id="top-date"></span><span class="top-hijri" id="top-hijri"></span></div>
+    <div class="top-actions">
+    <button class="icon-btn kbd-btn" id="btn-palette" title="Palet perintah (Ctrl+K)" aria-label="Palet perintah">⌘K</button>
+    <button class="icon-btn" id="btn-sticky" title="Tambah sticky note" aria-label="Tambah sticky note" hidden>📝</button>
+    <button class="icon-btn" id="btn-focus" title="Mode fokus (hanya jam, pencarian, Pomodoro)" aria-label="Mode fokus">
+      <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg>
+    </button>
+    <button class="icon-btn" id="btn-layout" title="Tata letak: template, susunan tersimpan, atur" aria-label="Tata letak">
+      <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="3" width="11" height="8" rx="2"/><rect x="3" y="14" width="11" height="7" rx="2"/><rect x="17" y="3" width="4" height="18" rx="1.5"/></svg>
+    </button>
+    <button class="icon-btn" id="btn-settings" title="Pengaturan" aria-label="Pengaturan">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.830 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    </button>
+    </div>
+  </header>
+
+  <!-- Every block below can be dragged and resized freely (see "Atur tata letak"). -->
+  <main class="board" id="board">
+    <div class="blk bare" data-b="clock">
+      <div class="blk-inner clock-blk">
+        <div class="clock" id="clock"></div>
+        <p class="greeting" id="greeting"></p>
+      </div>
+    </div>
+
+    <div class="blk bare" data-b="ayah">
+      <div class="blk-inner">
+        <figure class="ayah" id="ayah" hidden>
+          <p class="ayah-ar" id="ayah-ar" lang="ar" dir="rtl"></p>
+          <blockquote id="ayah-text"></blockquote>
+          <figcaption id="ayah-ref"></figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <div class="blk bare float" data-b="search">
+      <div class="blk-inner search-blk">
+        <div class="search-wrap">
+          <form class="search" id="search-form" autocomplete="off">
+            <div class="mode-switch" id="mode-switch" role="tablist" aria-label="Mode pencarian">
+              <button type="button" data-mode="web" role="tab"><span class="mi">🔍</span><span id="mode-web-label">Google</span></button>
+              <button type="button" data-mode="translate" role="tab"><span class="mi">🌐</span><span>Terjemah</span></button>
+            </div>
+            <input id="search" type="text" spellcheck="false" placeholder="Cari di web, riwayat, atau shortcut…" role="combobox" aria-expanded="false" aria-controls="suggest">
+            <select id="tr-lang" class="tr-lang" title="Terjemahkan ke" hidden></select>
+            <kbd>/</kbd>
+          </form>
+          <ul class="suggest" id="suggest" role="listbox" hidden></ul>
+          <p class="hint" id="search-hint">&nbsp;</p>
+
+          <section class="tr-panel" id="tr-panel" hidden aria-live="polite">
+            <div class="tr-head">
+              <span class="tr-badge">🌐</span>
+              <span class="tr-langs" id="tr-langs"></span>
+              <button class="icon-btn sm" id="tr-swap" title="Tukar arah terjemahan" aria-label="Tukar arah terjemahan">⇄</button>
+              <span class="spacer"></span>
+              <button class="icon-btn sm" id="tr-close" title="Tutup" aria-label="Tutup terjemahan">✕</button>
+            </div>
+            <div class="tr-text" id="tr-text"></div>
+            <div class="tr-alts" id="tr-alts" hidden></div>
+            <div class="tr-foot">
+              <button class="btn ghost sm" id="tr-speak">🔊 Dengarkan</button>
+              <button class="btn ghost sm" id="tr-copy">Salin</button>
+              <span class="spacer"></span>
+              <button class="btn ghost sm" id="tr-open">Google Translate ↗</button>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <div class="blk bare" data-b="shortcuts">
+      <div class="blk-inner shortcuts-blk">
+        <nav class="groups" id="groups" aria-label="Grup shortcut"></nav>
+        <div class="grid" id="grid"></div>
+      </div>
+    </div>
+
+    <div class="blk" data-b="weather"><article class="card blk-inner" id="w-weather"></article></div>
+    <div class="blk" data-b="music"><article class="card music blk-inner" id="w-music"></article></div>
+    <div class="blk" data-b="prayer"><article class="card blk-inner" id="w-prayer"></article></div>
+
+    <div class="blk" data-b="pomo">
+      <article class="card blk-inner" id="w-pomo">
+        <div class="card-head"><span>Fokus</span><span class="muted" id="pomo-count"></span></div>
+        <div class="pomo-modes" id="pomo-modes">
+          <button data-mode="work">Fokus</button><button data-mode="short">Istirahat</button><button data-mode="long">Panjang</button>
+        </div>
+        <div class="pomo-ring">
+          <svg viewBox="0 0 120 120" aria-hidden="true">
+            <circle cx="60" cy="60" r="52" class="ring-bg"/>
+            <circle cx="60" cy="60" r="52" class="ring-fg" id="pomo-ring"/>
+          </svg>
+          <div class="pomo-time"><span id="pomo-time">25:00</span><small id="pomo-label">Siap fokus</small></div>
+        </div>
+        <div class="pomo-actions">
+          <button class="btn ghost round" id="pomo-reset" title="Ulang">↺</button>
+          <button class="btn primary pomo-main" id="pomo-toggle">Mulai</button>
+          <button class="btn ghost round" id="pomo-skip" title="Lewati">⏭</button>
+        </div>
+        <div class="pomo-dots" id="pomo-dots"></div>
+      </article>
+    </div>
+
+    <div class="blk" data-b="calendar"><article class="card blk-inner" id="w-calendar"></article></div>
+
+    <div class="blk" data-b="countdown">
+      <article class="card blk-inner" id="w-countdown">
+        <div class="card-head"><span>Hitung mundur</span><button class="link-btn" id="cd-add-btn">+ Tambah</button></div>
+        <div id="cd-next-holiday" class="cd-holiday"></div>
+        <ul class="cd-list" id="cd-list"></ul>
+        <form class="cd-form" id="cd-form" autocomplete="off" hidden>
+          <input id="cd-name" placeholder="Nama acara, mis. Ulang tahun" maxlength="40" required>
+          <div class="cd-form-row">
+            <input id="cd-date" type="date" required>
+            <button class="btn primary" type="submit">Simpan</button>
+          </div>
+        </form>
+      </article>
+    </div>
+
+    <div class="blk" data-b="reminders">
+      <article class="card blk-inner" id="w-reminders">
+        <div class="card-head"><span>Pengingat</span><button class="link-btn" id="rem-add-btn">+ Tambah</button></div>
+        <ul class="rem-list" id="rem-list"></ul>
+        <p class="muted small" id="rem-note" hidden></p>
+      </article>
+    </div>
+
+    <div class="blk" data-b="todo">
+      <article class="card blk-inner" id="w-todo">
+        <div class="card-head"><span>Tugas</span><span class="muted" id="todo-count"></span></div>
+        <form id="todo-form" class="todo-form" autocomplete="off">
+          <input id="todo-input" type="text" placeholder="Tambah tugas, tekan Enter">
+        </form>
+        <ul class="todo-list" id="todo-list"></ul>
+        <button class="link-btn" id="todo-clear" hidden>Hapus yang selesai</button>
+      </article>
+    </div>
+
+    <div class="blk" data-b="notes">
+      <article class="card blk-inner" id="w-notes">
+        <div class="card-head"><span>Catatan</span><span class="notes-actions"><span class="muted" id="notes-status"></span><button class="mini-btn" id="notes-lockbtn" type="button" title="Kunci catatan dengan PIN">🔐</button></span></div>
+        <textarea id="notes" placeholder="Tulis apa saja… tersimpan otomatis."></textarea>
+        <form class="notes-lock" id="notes-lock" hidden autocomplete="off">
+          <div class="nl-icon">🔒</div>
+          <div class="nl-title">Catatan terkunci</div>
+          <div class="nl-row">
+            <input type="password" id="notes-pin" inputmode="numeric" maxlength="8" placeholder="PIN" aria-label="PIN catatan">
+            <button class="btn primary sm" type="submit">Buka</button>
+          </div>
+          <button class="link-btn" type="button" id="notes-forgot">Lupa PIN?</button>
+        </form>
+      </article>
+    </div>
+
+    <div class="blk" data-b="habits"><article class="card blk-inner" id="w-habits"></article></div>
+    <div class="blk" data-b="stats"><article class="card blk-inner" id="w-stats"></article></div>
+    <div class="blk" data-b="mood"><article class="card blk-inner" id="w-mood"></article></div>
+    <div class="blk" data-b="finance"><article class="card blk-inner" id="w-finance"></article></div>
+    <div class="blk" data-b="ambient"><article class="card blk-inner" id="w-ambient"></article></div>
+
+    <div class="drop-ghost" id="drop-ghost" hidden></div>
+  </main>
+
+  <div class="stickies" id="stickies" hidden></div>
+
+  <!-- Layout edit toolbar -->
+  <div class="layout-bar" id="layout-bar" hidden>
+    <div class="lb-hint">✋ <b>Seret</b> blok ke mana saja · tarik <b>sudut kanan bawah</b> untuk mengubah ukuran · <b>👁</b> sembunyikan · <b>↕</b> tinggi otomatis</div>
+    <div class="lb-row lb-presets">
+      <div class="lb-item"><span>Template</span><div class="chips" id="lb-templates"></div></div>
+      <div class="lb-item lb-grow"><span>Susunan tersimpan</span><div class="chips" id="lb-profiles"></div></div>
+    </div>
+    <div class="lb-row">
+      <div class="lb-item lb-hidden"><span>Blok tersembunyi (klik untuk menampilkan)</span>
+        <div class="chips" id="lb-hidden"></div>
+      </div>
+      <div class="lb-item"><span>Ikon shortcut</span>
+        <div class="seg sm" id="lb-tile"><button data-v="s">S</button><button data-v="m">M</button><button data-v="l">L</button></div>
+      </div>
+      <div class="lb-item"><span>Garis bantu</span>
+        <div class="seg sm" id="lb-gridlines"><button data-v="on">Tampil</button><button data-v="off">Sembunyi</button></div>
+      </div>
+    </div>
+    <div class="lb-actions">
+      <button class="btn ghost" id="lb-undo" type="button" hidden>↶ Batalkan</button>
+      <button class="btn ghost" id="lb-save" type="button">💾 Simpan susunan</button>
+      <button class="btn ghost" id="lb-compact" type="button" title="Naikkan semua blok untuk menutup ruang kosong">⇡ Rapikan</button>
+      <button class="btn ghost" id="lb-reset" type="button">Reset tata letak</button>
+      <button class="btn primary" id="lb-done" type="button">Selesai ✓</button>
+    </div>
+  </div>
+
+  <div class="menu layout-menu" id="layout-menu" hidden></div>
+
+  <!-- Add menu (shortcut / folder) -->
+  <div class="menu" id="add-menu" hidden>
+    <button data-add="shortcut">🔗 Shortcut</button>
+    <button data-add="folder">📁 Folder</button>
+  </div>
+
+  <!-- Shortcut dialog -->
+  <dialog id="dlg-shortcut" class="dialog">
+    <form id="form-shortcut" method="dialog">
+      <h2 id="dlg-shortcut-title">Tambah shortcut</h2>
+      <div class="preview-row">
+        <div class="tile-ico big" id="sc-preview"></div>
+        <div class="muted small">Ikon diambil otomatis dari situsnya. Bisa diganti dengan emoji atau link gambar.</div>
+      </div>
+      <label>Nama<input id="sc-name" required maxlength="40" placeholder="mis. YouTube"></label>
+      <label>Alamat / link<input id="sc-url" required placeholder="youtube.com atau steam://open/main"></label>
+      <div class="row2">
+        <label>Grup<select id="sc-group"></select></label>
+        <label>Folder<select id="sc-folder"></select></label>
+      </div>
+      <label>Ikon (opsional)<input id="sc-icon" placeholder="🎮 atau https://…/logo.png"></label>
+      <p class="muted small tip">Tip aplikasi: <code>steam://open/main</code> · <code>vscode://</code> · <code>spotify:</code> · <code>ms-settings:</code> · <code>mailto:</code></p>
+      <div class="dlg-actions">
+        <button type="button" class="btn danger" id="sc-delete">Hapus</button>
+        <span class="spacer"></span>
+        <button type="button" class="btn ghost" data-close>Batal</button>
+        <button type="submit" class="btn primary">Simpan</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Folder dialog -->
+  <dialog id="dlg-folder" class="dialog wide">
+    <div class="folder-head">
+      <span class="folder-emoji">📁</span>
+      <input id="folder-name" class="folder-name" maxlength="30" aria-label="Nama folder">
+      <button class="icon-btn" data-close aria-label="Tutup">✕</button>
+    </div>
+    <div class="grid mini" id="folder-grid"></div>
+    <div class="dlg-actions">
+      <button type="button" class="btn danger" id="folder-delete">Hapus folder</button>
+      <span class="spacer"></span>
+      <button type="button" class="btn ghost" id="folder-openall">⧉ Buka semua</button>
+    </div>
+  </dialog>
+
+  <!-- Group dialog -->
+  <dialog id="dlg-group" class="dialog small-dlg">
+    <form id="form-group" method="dialog">
+      <h2 id="dlg-group-title">Grup baru</h2>
+      <label>Nama grup<input id="grp-name" required maxlength="24" placeholder="mis. Kuliah"></label>
+      <div class="dlg-actions">
+        <button type="button" class="btn danger" id="grp-delete">Hapus</button>
+        <span class="spacer"></span>
+        <button type="button" class="btn ghost" data-close>Batal</button>
+        <button type="submit" class="btn primary">Simpan</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Generic prompt dialog -->
+  <dialog id="dlg-prompt" class="dialog small-dlg">
+    <form id="form-prompt" method="dialog">
+      <h2 id="prompt-title"></h2>
+      <label><span id="prompt-label"></span><input id="prompt-input" required maxlength="40"></label>
+      <div class="dlg-actions">
+        <span class="spacer"></span>
+        <button type="button" class="btn ghost" data-close>Batal</button>
+        <button type="submit" class="btn primary">Simpan</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Reminder dialog -->
+  <dialog id="dlg-reminder" class="dialog">
+    <form id="form-reminder" method="dialog">
+      <h2 id="rem-title">Pengingat baru</h2>
+      <label>Pesan<input id="rem-text" required maxlength="80" placeholder="mis. Minum air 💧"></label>
+      <div class="seg" id="rem-type">
+        <button type="button" data-v="interval">Berulang</button>
+        <button type="button" data-v="daily">Setiap hari</button>
+        <button type="button" data-v="once">Sekali</button>
+      </div>
+      <div data-show="interval">
+        <label>Setiap (menit)<input id="rem-every" type="number" min="1" max="1440" value="60"></label>
+        <div class="row2">
+          <label>Aktif dari jam<input id="rem-from" type="time" value="07:00"></label>
+          <label>Sampai jam<input id="rem-to" type="time" value="22:00"></label>
+        </div>
+      </div>
+      <div data-show="daily"><label>Jam<input id="rem-daily" type="time" value="08:00"></label></div>
+      <div data-show="once"><label>Tanggal & jam<input id="rem-once" type="datetime-local"></label></div>
+      <div class="dlg-actions">
+        <button type="button" class="btn danger" id="rem-delete">Hapus</button>
+        <span class="spacer"></span>
+        <button type="button" class="btn ghost" data-close>Batal</button>
+        <button type="submit" class="btn primary">Simpan</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Bookmark import dialog -->
+  <dialog id="dlg-import" class="dialog">
+    <form id="form-import" method="dialog">
+      <h2>Impor dari bookmark Chrome</h2>
+      <p class="muted small">Pilih folder bookmark. Folder itu menjadi grup baru; sub-foldernya menjadi folder shortcut.</p>
+      <label>Folder bookmark<select id="import-folder"></select></label>
+      <div class="dlg-actions">
+        <span class="spacer"></span>
+        <button type="button" class="btn ghost" data-close>Batal</button>
+        <button type="submit" class="btn primary">Impor</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Settings drawer -->
+  <div class="drawer-backdrop" id="drawer-backdrop"></div>
+  <aside class="drawer" id="drawer" aria-label="Pengaturan">
+    <div class="drawer-top">
+      <div class="drawer-head">
+        <h2>Pengaturan</h2>
+        <button class="icon-btn" id="drawer-close" aria-label="Tutup">✕</button>
+      </div>
+      <div class="set-search">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="set-search" type="text" placeholder="Cari pengaturan… (mis. font, azan, wallpaper)" autocomplete="off">
+      </div>
+      <nav class="set-tabs" id="set-tabs" role="tablist">
+        <button data-tab="look" role="tab">🎨 Tampilan</button>
+        <button data-tab="widgets" role="tab">🧩 Widget</button>
+        <button data-tab="search" role="tab">🔎 Pencarian</button>
+        <button data-tab="ibadah" role="tab">🕌 Ibadah</button>
+        <button data-tab="focus" role="tab">⏱ Fokus</button>
+        <button data-tab="pet" role="tab">🐱 Peliharaan</button>
+        <button data-tab="general" role="tab">⚙️ Umum</button>
+      </nav>
+    </div>
+    <p class="set-noresult" id="set-noresult" hidden>Tidak ada pengaturan yang cocok.</p>
+
+    <!-- ===================== 🎨 Tampilan ===================== -->
+    <section class="set-sec" data-tab="look">
+      <h3>Tema</h3>
+      <div class="set-label">Rekomendasi tema (wallpaper + warna sekaligus)</div>
+      <div class="theme-grid" id="set-themes"></div>
+      <label class="switch-row">Tema otomatis sesuai waktu<input type="checkbox" id="set-autotheme"><span class="switch"></span></label>
+      <p class="muted small" id="autotheme-info" style="margin:-6px 0 4px"></p>
+    </section>
+
+    <section class="set-sec" data-tab="look">
+      <h3>Wallpaper</h3>
+      <div class="swatches walls" id="set-walls"></div>
+      <label class="switch-row">📷 Foto harian otomatis (Bing)<input type="checkbox" id="set-dailyphoto"><span class="switch"></span></label>
+      <p class="muted small" style="margin:-6px 0 10px">Foto pemandangan baru setiap hari. Klik ❤️ di pojok kiri bawah layar untuk menyimpannya.</p>
+      <div class="set-sub" id="set-photo-box" hidden>
+        <label class="switch-row">Acak dari foto favorit saja<input type="checkbox" id="set-photofav-random"><span class="switch"></span></label>
+        <div class="set-label">Foto favorit</div>
+        <div class="photo-favs" id="set-photo-favs"></div>
+      </div>
+      <div class="inline-form wrap">
+        <label class="btn ghost file-btn">Pakai gambar sendiri<input type="file" id="set-wall-file" accept="image/*" hidden></label>
+        <button class="btn ghost" id="set-wall-remove" type="button">Hapus gambar</button>
+      </div>
+      <label>Redupkan <span class="muted small" id="set-dim-val"></span><input type="range" id="set-dim" min="0" max="80"></label>
+      <label>Blur gambar <span class="muted small" id="set-blur-val"></span><input type="range" id="set-blur" min="0" max="20"></label>
+      <div class="set-label">Wallpaper bergerak</div>
+      <div class="seg" id="set-motion"><button data-v="none">Diam</button><button data-v="gradient">Gradien</button><button data-v="particles">Partikel</button><button data-v="video">Video</button></div>
+      <div class="inline-form wrap" id="set-video-row" hidden>
+        <label class="btn ghost file-btn">Unggah video (MP4, maks 60 MB)<input type="file" id="set-video-file" accept="video/mp4,video/webm" hidden></label>
+        <span class="muted small" id="set-video-info"></span>
+      </div>
+    </section>
+
+    <section class="set-sec" data-tab="look">
+      <h3>Warna & gaya</h3>
+      <div class="set-label">Warna aksen</div>
+      <div class="swatches" id="set-accents"></div>
+      <div class="set-label">Gaya kartu widget</div>
+      <div class="seg" id="set-cardstyle"><button data-v="glass">Kaca</button><button data-v="solid">Solid</button><button data-v="outline">Garis</button><button data-v="neon">Neon</button></div>
+      <label>Transparansi kartu <span class="muted small" id="set-glass-val"></span><input type="range" id="set-glass" min="0" max="40"></label>
+      <label>Sudut kartu <span class="muted small" id="set-radius-val"></span><input type="range" id="set-radius" min="4" max="32"></label>
+      <label>Font
+        <select id="set-font">
+          <option value="outfit">Outfit (modern)</option>
+          <option value="poppins">Poppins (bersih)</option>
+          <option value="nunito">Nunito (lembut)</option>
+          <option value="fredoka">Fredoka (bulat & imut)</option>
+          <option value="playfair">Playfair (elegan, serif)</option>
+          <option value="mono">JetBrains Mono (teknis)</option>
+        </select>
+      </label>
+    </section>
+
+    <section class="set-sec" data-tab="look">
+      <h3>Jam</h3>
+      <div class="seg wrap" id="set-clock">
+        <button data-v="digital">Digital</button><button data-v="analog">Analog</button><button data-v="flip">Flip</button><button data-v="neon">Neon</button><button data-v="words">Kata</button>
+      </div>
+      <label class="switch-row">Format 24 jam<input type="checkbox" id="set-h24"><span class="switch"></span></label>
+      <label class="switch-row">Tampilkan detik<input type="checkbox" id="set-sec"><span class="switch"></span></label>
+    </section>
+
+    <section class="set-sec" data-tab="look">
+      <h3>Efek</h3>
+      <label class="switch-row">Efek cuaca di latar (hujan, petir, salju, bintang)<input type="checkbox" id="set-weatherfx"><span class="switch"></span></label>
+      <label class="switch-row">Visualizer musik di bawah layar<input type="checkbox" id="set-musicviz"><span class="switch"></span></label>
+      <label>Dekorasi musiman
+        <select id="set-season">
+          <option value="auto">Otomatis sesuai tanggal</option>
+          <option value="off">Mati</option>
+          <option value="ramadan">🌙 Ramadan</option>
+          <option value="lebaran">🕌 Lebaran</option>
+          <option value="merdeka">🇮🇩 17 Agustus</option>
+          <option value="natal">🎄 Natal</option>
+          <option value="tahunbaru">🎆 Tahun Baru</option>
+        </select>
+      </label>
+      <label class="switch-row">Peliharaan ikut pakai kostum musiman<input type="checkbox" id="set-season-pet"><span class="switch"></span></label>
+      <div class="set-label">Efek kursor</div>
+      <div class="seg" id="set-cursor"><button data-v="off">Mati</button><button data-v="sparkle">Percikan saat klik</button><button data-v="trail">Jejak bintang</button></div>
+    </section>
+
+    <!-- ===================== 🧩 Widget ===================== -->
+    <section class="set-sec" data-tab="widgets">
+      <h3>Tata letak</h3>
+      <p class="muted small" style="margin:0 0 10px">Seret, ubah ukuran, pakai template, atau simpan susunanmu sendiri.</p>
+      <button class="btn primary" id="set-layout" type="button">Atur tata letak</button>
+    </section>
+
+    <section class="set-sec" data-tab="widgets">
+      <h3>Tampilkan</h3>
+      <div class="widget-toggles">
+        <label class="switch-row">Jam & sapaan<input type="checkbox" data-widget="clock"><span class="switch"></span></label>
+        <label class="switch-row">Kotak pencarian<input type="checkbox" data-widget="search"><span class="switch"></span></label>
+        <label class="switch-row">Shortcut<input type="checkbox" data-widget="shortcuts"><span class="switch"></span></label>
+        <label class="switch-row">Ayat harian<input type="checkbox" data-widget="ayah"><span class="switch"></span></label>
+        <label class="switch-row">Cuaca<input type="checkbox" data-widget="weather"><span class="switch"></span></label>
+        <label class="switch-row">Musik (YouTube)<input type="checkbox" data-widget="music"><span class="switch"></span></label>
+        <label class="switch-row">Jadwal sholat & kiblat<input type="checkbox" data-widget="prayer"><span class="switch"></span></label>
+        <label class="switch-row">Pomodoro<input type="checkbox" data-widget="pomo"><span class="switch"></span></label>
+        <label class="switch-row">Kalender<input type="checkbox" data-widget="calendar"><span class="switch"></span></label>
+        <label class="switch-row">Hitung mundur<input type="checkbox" data-widget="countdown"><span class="switch"></span></label>
+        <label class="switch-row">Pengingat<input type="checkbox" data-widget="reminders"><span class="switch"></span></label>
+        <label class="switch-row">Tugas<input type="checkbox" data-widget="todo"><span class="switch"></span></label>
+        <label class="switch-row">Catatan<input type="checkbox" data-widget="notes"><span class="switch"></span></label>
+        <label class="switch-row">✨ Kebiasaan harian<input type="checkbox" data-widget="habits"><span class="switch"></span></label>
+        <label class="switch-row">✨ Statistik fokus<input type="checkbox" data-widget="stats"><span class="switch"></span></label>
+        <label class="switch-row">✨ Mood harian<input type="checkbox" data-widget="mood"><span class="switch"></span></label>
+        <label class="switch-row">✨ Kurs & harga emas<input type="checkbox" data-widget="finance"><span class="switch"></span></label>
+        <label class="switch-row">✨ Suara latar (hujan, ombak…)<input type="checkbox" data-widget="ambient"><span class="switch"></span></label>
+      </div>
+    </section>
+
+    <section class="set-sec" data-tab="widgets">
+      <h3>Opsi widget</h3>
+      <label class="switch-row">Cuaca lengkap (per jam, 7 hari, kualitas udara)<input type="checkbox" id="set-weatherdetail"><span class="switch"></span></label>
+      <label class="switch-row">Sticky notes di halaman<input type="checkbox" id="set-stickies"><span class="switch"></span></label>
+      <button class="btn ghost" id="set-sticky-add" type="button">📝 Tambah sticky note</button>
+    </section>
+
+    <!-- ===================== 🔎 Pencarian ===================== -->
+    <section class="set-sec" data-tab="search">
+      <h3>Pencarian & shortcut</h3>
+      <label>Mesin pencari
+        <select id="set-engine">
+          <option value="google">Google</option>
+          <option value="bing">Bing</option>
+          <option value="duckduckgo">DuckDuckGo</option>
+          <option value="youtube">YouTube</option>
+        </select>
+      </label>
+      <label class="switch-row">Riwayat & bookmark di pencarian<input type="checkbox" id="set-history"><span class="switch"></span></label>
+      <label class="switch-row">Kalkulator & konversi di pencarian<input type="checkbox" id="set-calc"><span class="switch"></span></label>
+      <p class="muted small" style="margin:-6px 0 12px">Ketik <code>12*5+3</code>, <code>10 usd ke idr</code>, <code>5 km ke mil</code>, atau <code>30 c ke f</code>.</p>
+      <label class="switch-row">Grup "Sering dibuka" otomatis<input type="checkbox" id="set-frequent"><span class="switch"></span></label>
+      <label class="switch-row">Buka shortcut di tab baru<input type="checkbox" id="set-newtab"><span class="switch"></span></label>
+      <p class="muted small">Tekan <kbd>Ctrl</kbd>+<kbd>K</kbd> di mana saja untuk palet perintah: cari shortcut, ganti tema, mulai Pomodoro, dan lainnya.</p>
+    </section>
+
+    <!-- ===================== 🕌 Ibadah ===================== -->
+    <section class="set-sec" data-tab="ibadah">
+      <h3>Lokasi <span class="muted small">(cuaca, sholat & kiblat)</span></h3>
+      <form id="set-city-form" class="inline-form">
+        <input id="set-city" placeholder="mis. Bandung">
+        <button class="btn primary" type="submit">Simpan</button>
+      </form>
+    </section>
+
+    <section class="set-sec" data-tab="ibadah">
+      <h3>Notifikasi azan</h3>
+      <label class="switch-row">Aktifkan notifikasi azan<input type="checkbox" id="set-azan"><span class="switch"></span></label>
+      <div class="chips" id="set-azan-prayers">
+        <label class="chip"><input type="checkbox" data-prayer="Fajr"><span>Subuh</span></label>
+        <label class="chip"><input type="checkbox" data-prayer="Dhuhr"><span>Dzuhur</span></label>
+        <label class="chip"><input type="checkbox" data-prayer="Asr"><span>Ashar</span></label>
+        <label class="chip"><input type="checkbox" data-prayer="Maghrib"><span>Maghrib</span></label>
+        <label class="chip"><input type="checkbox" data-prayer="Isha"><span>Isya</span></label>
+      </div>
+      <label>Ingatkan sebelumnya
+        <select id="set-azan-before">
+          <option value="0">Tidak</option>
+          <option value="5">5 menit sebelum</option>
+          <option value="10">10 menit sebelum</option>
+          <option value="15">15 menit sebelum</option>
+        </select>
+      </label>
+      <label>Suara
+        <select id="set-azan-sound">
+          <option value="chime">Nada lembut</option>
+          <option value="custom">File azan sendiri</option>
+          <option value="none">Tanpa suara</option>
+        </select>
+      </label>
+      <div class="inline-form wrap">
+        <label class="btn ghost file-btn">Unggah file azan (MP3)<input type="file" id="set-azan-file" accept="audio/*" hidden></label>
+        <button class="btn ghost" id="set-azan-test" type="button">Tes</button>
+      </div>
+      <p class="muted small" id="set-azan-file-info"></p>
+    </section>
+
+    <!-- ===================== ⏱ Fokus ===================== -->
+    <section class="set-sec" data-tab="focus">
+      <h3>Pomodoro</h3>
+      <div class="row2">
+        <label>Fokus (menit)<input type="number" min="1" max="180" id="set-pomo-work"></label>
+        <label>Istirahat (menit)<input type="number" min="1" max="60" id="set-pomo-short"></label>
+        <label>Istirahat panjang<input type="number" min="1" max="90" id="set-pomo-long"></label>
+        <label>Panjang setiap … sesi<input type="number" min="2" max="12" id="set-pomo-every"></label>
+      </div>
+      <label class="switch-row">Lanjut otomatis ke sesi berikutnya<input type="checkbox" id="set-pomo-auto"><span class="switch"></span></label>
+      <p class="muted small">Tombol 🎯 di pojok kanan atas = mode fokus. Widget <b>Suara latar</b> dan <b>Statistik fokus</b> bisa dinyalakan di tab 🧩 Widget.</p>
+    </section>
+
+    <!-- ===================== 🐱 Peliharaan ===================== -->
+    <section class="set-sec" data-tab="pet">
+      <h3>Peliharaan</h3>
+      <label class="switch-row">Tampilkan peliharaan<input type="checkbox" id="set-pet-on"><span class="switch"></span></label>
+      <div class="pet-picks" id="set-pet-type"></div>
+      <label>Nama peliharaan<input id="set-pet-name" maxlength="16" placeholder="mis. Mochi"></label>
+      <div class="set-label">Status <span id="set-pet-level" class="muted"></span></div>
+      <div class="pet-stats" id="set-pet-stats"></div>
+      <div class="set-label">Aksesori <span class="muted small">(terbuka seiring naik level — main, elus, beri makan)</span></div>
+      <div class="acc-picks" id="set-pet-acc"></div>
+      <div class="inline-form wrap">
+        <button class="btn ghost" id="set-pet-call" type="button">📣 Panggil ke sini</button>
+        <button class="btn ghost" id="set-pet-feed" type="button">🍪 Beri camilan</button>
+        <button class="btn ghost" id="set-pet-ball" type="button">🎾 Main bola</button>
+      </div>
+    </section>
+
+    <section class="set-sec" data-tab="pet">
+      <h3>Peliharaan kedua</h3>
+      <label class="switch-row">Tampilkan peliharaan kedua<input type="checkbox" id="set-pet2-on"><span class="switch"></span></label>
+      <div id="set-pet2" class="pet2-box" hidden>
+        <div class="pet-picks" id="set-pet2-type"></div>
+        <label>Nama peliharaan kedua<input id="set-pet2-name" maxlength="16" placeholder="mis. Kopi"></label>
+        <div class="set-label">Status <span id="set-pet2-level" class="muted"></span></div>
+        <div class="pet-stats" id="set-pet2-stats"></div>
+        <div class="set-label">Aksesori</div>
+        <div class="acc-picks" id="set-pet2-acc"></div>
+      </div>
+    </section>
+
+    <section class="set-sec" data-tab="pet">
+      <h3>Tingkah laku</h3>
+      <div class="set-label">Ukuran</div>
+      <div class="seg" id="set-pet-size"><button data-v="s">Kecil</button><button data-v="m">Sedang</button><button data-v="l">Besar</button></div>
+      <div class="set-label">Tingkah laku</div>
+      <div class="seg" id="set-pet-activity"><button data-v="calm">Kalem</button><button data-v="normal">Normal</button><button data-v="hyper">Lincah</button></div>
+      <label class="switch-row">Balon bicara<input type="checkbox" id="set-pet-bubbles"><span class="switch"></span></label>
+      <label class="switch-row">Suara saat disentuh<input type="checkbox" id="set-pet-sound"><span class="switch"></span></label>
+      <p class="muted small">Klik = main · tahan = elus · seret & lepas = lempar · klik dua kali = trik · klik kanan = menu (camilan, bola, tidur).</p>
+    </section>
+
+    <!-- ===================== ⚙️ Umum ===================== -->
+    <section class="set-sec" data-tab="general">
+      <h3>Profil</h3>
+      <label>Nama sapaan<input id="set-name" maxlength="30"></label>
+    </section>
+
+    <section class="set-sec" data-tab="general">
+      <h3>Suara & notifikasi</h3>
+      <label class="switch-row">Suara pomodoro & pengingat<input type="checkbox" id="set-sound"><span class="switch"></span></label>
+      <label>Volume <span class="muted small" id="set-volume-val"></span><input type="range" id="set-volume" min="0" max="100"></label>
+      <div class="inline-form wrap">
+        <button class="btn ghost" type="button" data-test="pomo">Tes pomodoro</button>
+        <button class="btn ghost" type="button" data-test="reminder">Tes pengingat</button>
+      </div>
+    </section>
+
+    <section class="set-sec" data-tab="general">
+      <h3>Sinkron & data</h3>
+      <label class="switch-row">Sinkron antar perangkat (akun Google Chrome)<input type="checkbox" id="set-sync"><span class="switch"></span></label>
+      <p class="muted small" id="set-sync-info" style="margin:-6px 0 10px">Shortcut, tata letak, tugas, kebiasaan, dan pengaturan ikut ke Chrome di laptop lain yang memakai akun sama. Wallpaper/video/azan sendiri tidak ikut.</p>
+      <div class="inline-form wrap">
+        <button class="btn ghost" id="set-sync-now" type="button" hidden>⟳ Sinkron sekarang</button>
+        <button class="btn ghost" id="set-import-bm" type="button">Impor bookmark Chrome</button>
+        <button class="btn ghost" id="set-export" type="button">Export</button>
+        <label class="btn ghost file-btn">Import<input type="file" id="set-import" accept="application/json" hidden></label>
+        <button class="btn danger" id="set-reset" type="button">Reset semua</button>
+      </div>
+    </section>
+
+    <section class="set-sec" data-tab="general">
+      <h3>Pintasan keyboard</h3>
+      <ul class="keys">
+        <li><kbd>Ctrl</kbd>+<kbd>K</kbd> Palet perintah (cari apa saja)</li>
+        <li><kbd>/</kbd> Fokus ke pencarian</li>
+        <li><kbd>1</kbd>–<kbd>9</kbd> Buka shortcut ke-1 s/d 9</li>
+        <li><kbd>Alt</kbd>+<kbd>←</kbd>/<kbd>→</kbd> Pindah grup</li>
+        <li><kbd>↑</kbd>/<kbd>↓</kbd> Pilih saran riwayat/bookmark</li>
+        <li><kbd>Enter</kbd> Buka shortcut teratas / cari di web</li>
+        <li><kbd>Shift</kbd>+<kbd>Enter</kbd> Selalu cari di web</li>
+        <li>Mode <b>🌐 Terjemah</b>: ketik, terjemahan langsung muncul</li>
+        <li><code>!y</code> YouTube · <code>!gh</code> GitHub · <code>!w</code> Wikipedia · <code>!m</code> Maps · <code>!tr</code> Terjemahan</li>
+        <li><kbd>Esc</kbd> Tutup panel / keluar mode fokus</li>
+      </ul>
+    </section>
+  </aside>
+
+  <div class="toast" id="toast" role="status"></div>
+  <script src="sound.js"></script>
+  <script src="extras.js"></script>
+  <script src="pet.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
